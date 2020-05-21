@@ -13,27 +13,28 @@ public class NearbyElementsChecker {
 
 
     public int[] getNearbyElements(int row, int col, int range) {
+        System.out.println("Nearby elements:");
         if (row>=testArray.length){
             return null;
         } else {
             int[] selectedRow = testArray[row];
             if (col>selectedRow.length-1){
-                int leftEnd = (col-range<0) ? 0:col-range;
+                int leftEnd = Math.max(col - range, 0);
                 int[] nearby = Arrays.copyOfRange(selectedRow,leftEnd,selectedRow.length);
                 System.out.println(Arrays.toString(nearby));
                 return nearby;
             } else if (col<0){
                 if (col+range>=0) {
-                    int rightEnd = (col+range+1>selectedRow.length) ? selectedRow.length:col+range+1;
+                    int rightEnd = Math.min(col + range + 1, selectedRow.length);
                     int[] nearby = Arrays.copyOfRange(selectedRow,0,rightEnd);
                     System.out.println(Arrays.toString(nearby));
                     return nearby;
                 }
                 return null;
             } else {
-                int rightEnd = (col+range+1>selectedRow.length) ? selectedRow.length:col+range+1;
+                int rightEnd = Math.min(col + range + 1, selectedRow.length);
                 int[] rightSide = Arrays.copyOfRange(selectedRow,col+1,rightEnd);
-                int leftEnd = (col-range<0) ? 0:col-range;
+                int leftEnd = Math.max(col - range, 0);
                 int[] leftSide = Arrays.copyOfRange(selectedRow,leftEnd,col);
                 int length = leftSide.length + rightSide.length;
                 int[] nearby = new int[length];
@@ -53,7 +54,25 @@ public class NearbyElementsChecker {
     }
 
     private void prettyPrint() {
-        System.out.println("The elements of the array should be displayed here.");
+        System.out.println("Pretty print:");
+        int maxLength=0;
+        StringBuilder print;
+        for (int[] row: testArray) {
+            for (int col:row) {
+                if (String.valueOf(col).length() > maxLength) {
+                    maxLength = String.valueOf(col).length();
+                }
+            }
+        }
+        for (int[] row: testArray) {
+            print = new StringBuilder();
+            for (int col:row) {
+                int spaces = maxLength+1 - String.valueOf(col).length();
+                print.append(" ".repeat(Math.max(0, spaces)));
+                print.append(col);
+            }
+            System.out.println(print);
+        }
     }
 
     public static void main(String[] args) {
